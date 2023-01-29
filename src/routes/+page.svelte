@@ -120,7 +120,7 @@
         {:else if form?.success}
             <div class="success">Your banshare has been submitted.</div>
         {/if}
-        <form method="post">
+        <form action="/" method="post">
             <div class="glass">
                 <h3>ID(s) of the offender(s)</h3>
                 <input

@@ -19,8 +19,6 @@ function compare(a: string, b: string): number {
 
 export const actions: Actions = {
     default: async ({ request, locals, fetch }) => {
-        console.log("??");
-
         const data = await request.formData();
         const user = (locals as any).user;
 
