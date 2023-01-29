@@ -1,5 +1,9 @@
 <script lang="ts">
-    import { PUBLIC_DIS_API, PUBLIC_TCN_API } from "$env/static/public";
+    import {
+        PUBLIC_ALLOWLIST,
+        PUBLIC_DIS_API,
+        PUBLIC_TCN_API,
+    } from "$env/static/public";
     import { LoadingSpinner } from "@daedalus-discord/webkit";
     import { onMount } from "svelte";
 
@@ -23,7 +27,7 @@
 
             const tcn_servers = (await tcn_request.json())
                 .map((server: { id: string }) => server.id)
-                .concat(["927153548339343360"]);
+                .concat(PUBLIC_ALLOWLIST.split(" "));
 
             servers = (await discord_request.json()).filter(
                 (server: { id: string; permissions: number }) =>

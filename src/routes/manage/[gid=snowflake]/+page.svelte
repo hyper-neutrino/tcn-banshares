@@ -28,7 +28,6 @@
             .map(
                 (server) => [server.id, server.name] satisfies [string, string]
             )
-            .concat([["927153548339343360", "Staging Server"]])
             .sort(([, a], [, b]) => a.localeCompare(b));
 
         const request = await fetch(`/settings?gid=${data.gid}`);

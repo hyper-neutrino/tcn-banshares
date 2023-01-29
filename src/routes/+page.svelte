@@ -31,9 +31,6 @@
         for (const guild of user_data?.guilds ?? [])
             if (map.has(guild)) output.push([guild, map.get(guild) as string]);
 
-        map.set("927153548339343360", "Staging Server");
-        output.push(["927153548339343360", "Staging Server"]);
-
         servers = output;
     });
 

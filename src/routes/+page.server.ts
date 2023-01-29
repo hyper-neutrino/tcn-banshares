@@ -89,10 +89,10 @@ export const actions: Actions = {
             `${PUBLIC_TCN_API}/guilds/${server}`
         );
 
-        if (server !== "927153548339343360" && !server_request.ok)
+        if (!server_request.ok)
             return abort(
                 400,
-                "The server you selected does not appear to be in the TCN. (Tihs message should never appear...)"
+                "The server you selected does not appear to be in the TCN. (This message should never appear...)"
             );
 
         const server_name = (await server_request.json()).name;
@@ -183,6 +183,7 @@ export const actions: Actions = {
 
         await db.banshares.insertOne({
             message: post.id,
+            url: post.url,
             server,
             id_list,
             reason,

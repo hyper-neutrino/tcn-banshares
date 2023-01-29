@@ -8,7 +8,11 @@ import {
     DOMAIN,
     REFRESH,
 } from "$env/static/private";
-import { PUBLIC_DIS_API, PUBLIC_TCN_API } from "$env/static/public";
+import {
+    PUBLIC_ALLOWLIST,
+    PUBLIC_DIS_API,
+    PUBLIC_TCN_API,
+} from "$env/static/public";
 
 dotenv.config();
 
@@ -34,19 +38,23 @@ export async function auth_server({
     if (!gid?.match(/^[1-9][0-9]{16,19}$/)) return fail("Invalid guild ID.");
 
     try {
-        const [tcn_request, discord_request] = await Promise.all([
-            fetch(`${PUBLIC_TCN_API}/guilds/${gid}`),
-            fetch(`${PUBLIC_DIS_API}/users/@me/guilds`, {
+        if (PUBLIC_ALLOWLIST.indexOf(gid) === -1) {
+            const tcn_request = await fetch(`${PUBLIC_TCN_API}/guilds/${gid}`);
+            if (!tcn_request.ok)
+                return fail("The ID you provided is not a TCN server.");
+        }
+
+        const discord_request = await fetch(
+            `${PUBLIC_DIS_API}/users/@me/guilds`,
+            {
                 headers: {
                     Authorization: `Bearer ${cookies.get(
                         "discord_access_token"
                     )}`,
                 },
-            }),
-        ]);
+            }
+        );
 
-        if (gid !== "927153548339343360" && !tcn_request.ok)
-            return fail("The ID you provided is not a TCN server.");
         if (!discord_request.ok)
             if (discord_request.status === 429)
                 return fail(
