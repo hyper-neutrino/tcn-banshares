@@ -1,4 +1,4 @@
-import { ALERT, CHANNEL, DDL_TOKEN, LOG, TOKEN } from "$env/static/private";
+import { ALERT, DDL_TOKEN, LOG, TOKEN } from "$env/static/private";
 import {
     PUBLIC_ALLOWLIST,
     PUBLIC_DDL_API,
@@ -7,19 +7,18 @@ import {
 import {
     ApplicationCommandOptionType,
     ApplicationCommandType,
-    ButtonInteraction,
+    type ButtonInteraction,
     ButtonStyle,
     Client,
     ComponentType,
-    Guild,
+    type Guild,
     IntentsBitField,
-    Message,
-    ModalSubmitInteraction,
+    type Message,
+    type ModalSubmitInteraction,
     PermissionFlagsBits,
-    StringSelectMenuInteraction,
+    type StringSelectMenuInteraction,
     TextInputStyle,
-    User,
-    type Interaction,
+    type User,
     type StringSelectMenuComponentData,
 } from "discord.js";
 import db from "./db.js";
