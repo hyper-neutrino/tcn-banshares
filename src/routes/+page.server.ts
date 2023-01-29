@@ -1,7 +1,6 @@
 import { ALERT, CHANNEL, NON_URGENT, URGENT } from "$env/static/private";
 import { PUBLIC_TCN_API } from "$env/static/public";
 import { fail, type Actions } from "@sveltejs/kit";
-import { ButtonStyle, ComponentType } from "discord.js";
 import { escape } from "svelte/internal";
 import bot from "../bot.js";
 import db from "../db.js";
@@ -20,6 +19,8 @@ function compare(a: string, b: string): number {
 
 export const actions: Actions = {
     default: async ({ request, locals, fetch }) => {
+        console.log("??");
+
         const data = await request.formData();
         const user = (locals as any).user;
 
