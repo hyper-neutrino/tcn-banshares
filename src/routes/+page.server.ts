@@ -160,11 +160,11 @@ export const actions: Actions = {
 
             try {
                 message = format(
-                    await create_gist(
+                    `<${await create_gist(
                         `banshare-ids-${iso}`,
                         `IDs for the banshare on ${iso}`,
                         ids_output
-                    ),
+                    )}>`,
                     ""
                 );
             } catch {
