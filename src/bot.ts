@@ -642,7 +642,6 @@ bot.on("interactionCreate", async (interaction) => {
                                         },
                                     ],
                                 },
-                                ...report,
                             ];
                         } else if (settings?.button) {
                             components = [
@@ -657,13 +656,12 @@ bot.on("interactionCreate", async (interaction) => {
                                         },
                                     ],
                                 },
-                                ...report,
                             ];
                         }
 
                         const post = await channel.send({
                             content,
-                            components,
+                            components: components.concat(report),
                         });
 
                         await save(banshare, guild, post);
