@@ -144,6 +144,49 @@ bot.once("ready", async () => {
                     },
                 ],
             },
+            {
+                type: ApplicationCommandOptionType.Subcommand,
+                name: "ban-button",
+                description: "enable/disable the manual ban button",
+                options: [
+                    {
+                        type: ApplicationCommandOptionType.Boolean,
+                        name: "enable",
+                        description: "whether or not the ban button is enabled",
+                    },
+                ],
+            },
+            {
+                type: ApplicationCommandOptionType.Subcommand,
+                name: "daedalus-integration",
+                description: "enable/disable the Daedalus integration",
+                options: [
+                    {
+                        type: ApplicationCommandOptionType.Boolean,
+                        name: "enable",
+                        description:
+                            "whether or not the Daedalus integration is enabled",
+                    },
+                ],
+            },
+            {
+                type: ApplicationCommandOptionType.Subcommand,
+                name: "autoban",
+                description: "set the autoban threshold",
+                options: [
+                    {
+                        type: ApplicationCommandOptionType.String,
+                        name: "threshold",
+                        description: "the autoban threshold",
+                        choices: [
+                            { name: "None", value: "none" },
+                            { name: "Critical Only", value: "crit" },
+                            { name: "Medium and Up", value: "med" },
+                            { name: "All", value: "all" },
+                        ],
+                    },
+                ],
+            },
         ],
     });
 
@@ -202,6 +245,62 @@ bot.on("interactionCreate", async (interaction) => {
 
                     await interaction.editReply(
                         "Logs will no longer be posted."
+                    );
+                }
+            } else if (!subgroup) {
+                if (subcommand === "ban-button") {
+                    const enable = interaction.options.getBoolean(
+                        "enable",
+                        true
+                    );
+
+                    await db.settings.findOneAndUpdate(
+                        { guild: interaction.guild!.id },
+                        { $set: { button: enable } },
+                        { upsert: true }
+                    );
+
+                    await interaction.editReply(
+                        `${enable ? "Enabled" : "Disabled"} the ban button.`
+                    );
+                } else if (subcommand === "daedalus-integration") {
+                    const enable = interaction.options.getBoolean(
+                        "enable",
+                        true
+                    );
+
+                    await db.settings.findOneAndUpdate(
+                        { guild: interaction.guild!.id },
+                        { $set: { daedalus: enable } },
+                        { upsert: true }
+                    );
+
+                    await interaction.editReply(
+                        `${
+                            enable ? "Enabled" : "Disabled"
+                        } Daedalus integration.`
+                    );
+                } else if (subcommand === "autoban") {
+                    const threshold = interaction.options.getString(
+                        "threshold",
+                        true
+                    );
+
+                    await db.settings.findOneAndUpdate(
+                        { guild: interaction.guild!.id },
+                        { $set: { autoban: threshold } },
+                        { upsert: true }
+                    );
+
+                    await interaction.editReply(
+                        `Set the autoban threshold to ${
+                            {
+                                none: "none",
+                                crit: "critical only",
+                                med: "medium + critical",
+                                all: "all",
+                            }[threshold]
+                        }.`
                     );
                 }
             }
