@@ -20,6 +20,7 @@ import {
     TextInputStyle,
     type User,
     type StringSelectMenuComponentData,
+    type APIEmbed,
 } from "discord.js";
 import db from "./db.js";
 import { components } from "./lib.js";
@@ -489,14 +490,24 @@ bot.on("interactionCreate", async (interaction) => {
             );
 
             await interaction.update({
-                content:
-                    interaction.message.content.substring(
-                        0,
-                        interaction.message.content.lastIndexOf(" ")
-                    ) +
-                    " " +
-                    severity[0].toUpperCase() +
-                    severity.substring(1),
+                embeds: [
+                    {
+                        title: "**Banshare**",
+                        color: 0x2d3136,
+                        fields: [
+                            ...interaction.message.embeds[0].fields.slice(
+                                0,
+                                -1
+                            ),
+                            {
+                                name: "Severity",
+                                value:
+                                    severity[0].toUpperCase() +
+                                    severity.substring(1),
+                            },
+                        ],
+                    },
+                ],
                 components: components(false, severity),
             });
         } else if (interaction.customId === "publish") {
@@ -559,12 +570,12 @@ bot.on("interactionCreate", async (interaction) => {
                     components: [],
                 });
             else {
-                let content: string;
+                let embeds: APIEmbed[];
 
                 try {
                     const message = await interaction.message.fetchReference();
                     await message.edit({ components: components(true) });
-                    content = message.content;
+                    embeds = message.embeds.map((e) => e.toJSON());
                 } catch {
                     await interaction.editReply({
                         content: "The original banshare could not be found.",
@@ -660,7 +671,7 @@ bot.on("interactionCreate", async (interaction) => {
                         }
 
                         const post = await channel.send({
-                            content,
+                            embeds,
                             components: components.concat(report),
                         });
 

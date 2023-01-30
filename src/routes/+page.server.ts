@@ -1,6 +1,7 @@
 import { ALERT, CHANNEL, NON_URGENT, URGENT } from "$env/static/private";
 import { PUBLIC_TCN_API } from "$env/static/public";
 import { fail, type Actions } from "@sveltejs/kit";
+import type { Message } from "discord.js";
 import { escape } from "svelte/internal";
 import bot from "../bot.js";
 import db from "../db.js";
@@ -142,31 +143,54 @@ export const actions: Actions = {
             ids_output = id_list.join(" ");
         }
 
-        const format = (ids: string, tags: string) =>
-            `**ID(s):** ${ids}\n${
-                tags.length > 0 ? `**Username(s):** ${tags}\n` : ""
-            }**Reason:** ${reason}\n**Evidence:** ${evidence}\n**Submitted by:** ${
-                user.username
-            }#${user.discriminator} (\`${
-                user.id
-            }\`) from ${server_name}\n**Severity:** ${
-                severity[0].toUpperCase() + severity.slice(1)
-            }`;
+        const format = (ids: string, tags: string) => ({
+            embeds: [
+                {
+                    title: "**Banshare**",
+                    color: 0x2d3136,
+                    fields: [
+                        { name: "ID(s)", value: ids },
+                        ...(tags.length > 0
+                            ? [{ name: "Username(s)", value: tags }]
+                            : []),
+                        { name: "Reason", value: reason },
+                        { name: "Evidence", value: evidence },
+                        {
+                            name: "Submitted by",
+                            value: `${user.username}#${user.discriminator} (\`${user.id}\`) from ${server_name}`,
+                        },
+                        {
+                            name: "Severity",
+                            value:
+                                severity[0].toUpperCase() + severity.slice(1),
+                        },
+                    ],
+                },
+            ],
+        });
 
-        let message: string = format(ids_output, tags.join(" "));
+        let post: Message;
 
-        if (message.length > 2000) {
+        try {
+            post = await channel.send({
+                ...format(id_list.join(" "), tags.join(" ")),
+                components: components(false, severity),
+            });
+        } catch {
             const iso = new Date().toISOString();
 
             try {
-                message = format(
-                    `<${await create_gist(
-                        `banshare-ids-${iso}`,
-                        `IDs for the banshare on ${iso}`,
-                        ids_output
-                    )}>`,
-                    ""
-                );
+                post = await channel.send({
+                    ...format(
+                        `<${await create_gist(
+                            `banshare-ids-${iso}`,
+                            `IDs for the banshare on ${iso}`,
+                            ids_output
+                        )}>`,
+                        ""
+                    ),
+                    components: components(false, severity),
+                });
             } catch {
                 return abort(
                     500,
@@ -174,11 +198,6 @@ export const actions: Actions = {
                 );
             }
         }
-
-        const post = await channel.send({
-            content: message,
-            components: components(false, severity),
-        });
 
         await db.banshares.insertOne({
             message: post.id,
