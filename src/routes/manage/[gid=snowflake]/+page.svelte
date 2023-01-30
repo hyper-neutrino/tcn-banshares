@@ -37,10 +37,7 @@
 
         response.button ??= false;
         response.daedalus ??= false;
-
-        response.autoban ??= {};
-        response.autoban.global ??= "none";
-        servers.forEach(([id]) => (response.autoban[id] = "default"));
+        response.autoban ??= "none";
 
         saved = JSON.stringify((settings = response));
     });
@@ -141,43 +138,16 @@
                 </ul>
                 <p>
                     You can configure automatic banning at four different levels
-                    &mdash; all, medium and above, critical only, and none. For
-                    each server, you can also override this setting or follow
-                    the default.
+                    &mdash; all, medium and above, critical only, and none.
                 </p>
             </Collapsable>
-            <h4>Global Settings</h4>
+            <h4>Autoban Threshold</h4>
             <select bind:value={settings.autoban.global}>
                 <option value="all">All</option>
                 <option value="med">Medium And Above</option>
                 <option value="crit">Critical Only</option>
                 <option value="none">None</option>
             </select>
-            <br />
-            <br />
-            <Collapsable
-                title="<b>Server Settings</b>"
-                header_color="white"
-                color="rgb(var(--darker))"
-            >
-                <table>
-                    {#each servers as [id, name]}
-                        <tr>
-                            <td><b>{name}</b></td>
-                            <td>
-                                <select bind:value={settings.autoban[id]}>
-                                    <option value="default">Default</option>
-                                    <option value="all">All</option>
-                                    <option value="med">Medium And Above</option
-                                    >
-                                    <option value="crit">Critical Only</option>
-                                    <option value="none">None</option>
-                                </select>
-                            </td>
-                        </tr>
-                    {/each}
-                </table>
-            </Collapsable>
         </div>
     {/if}
 
@@ -201,9 +171,3 @@
         background="#111"
     />
 </div>
-
-<style lang="scss">
-    td {
-        padding-right: 5px;
-    }
-</style>

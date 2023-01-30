@@ -512,11 +512,7 @@ bot.on("interactionCreate", async (interaction) => {
                             guild,
                         });
 
-                        let threshold =
-                            settings?.autoban?.[banshare.value!.server];
-
-                        if (threshold === "default" || !threshold)
-                            threshold = settings?.autoban?.global ?? "none";
+                        const threshold = settings?.autoban ?? "none";
 
                         let components: any[] = [];
 
