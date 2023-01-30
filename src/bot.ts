@@ -153,6 +153,7 @@ bot.once("ready", async () => {
                         type: ApplicationCommandOptionType.Boolean,
                         name: "enable",
                         description: "whether or not the ban button is enabled",
+                        required: true,
                     },
                 ],
             },
@@ -166,6 +167,7 @@ bot.once("ready", async () => {
                         name: "enable",
                         description:
                             "whether or not the Daedalus integration is enabled",
+                        required: true,
                     },
                 ],
             },
@@ -184,6 +186,7 @@ bot.once("ready", async () => {
                             { name: "Medium and Up", value: "med" },
                             { name: "All", value: "all" },
                         ],
+                        required: true,
                     },
                 ],
             },
