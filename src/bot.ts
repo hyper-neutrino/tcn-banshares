@@ -312,23 +312,6 @@ bot.on("interactionCreate", async (interaction) => {
     } else if (interaction.isButton()) {
         if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers))
             return;
-        else if (interaction.customId === "cancel-autoban")
-            await interaction.update({
-                components: [
-                    {
-                        type: ComponentType.ActionRow,
-                        components: [
-                            {
-                                type: ComponentType.Button,
-                                style: ButtonStyle.Danger,
-                                customId: "ban",
-                                label: "Ban",
-                            },
-                        ],
-                    },
-                    ...report,
-                ],
-            });
         else if (interaction.customId === "ban") {
             const banshare = await get_banshare(
                 interaction,
@@ -644,12 +627,6 @@ bot.on("interactionCreate", async (interaction) => {
                                             customId: "-",
                                             label: "Auto-ban scheduled",
                                             disabled: true,
-                                        },
-                                        {
-                                            type: ComponentType.Button,
-                                            style: ButtonStyle.Danger,
-                                            customId: "cancel-autoban",
-                                            label: "Cancel",
                                         },
                                     ],
                                 },
