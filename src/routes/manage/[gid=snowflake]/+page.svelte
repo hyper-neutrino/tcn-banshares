@@ -142,7 +142,7 @@
                 </p>
             </Collapsable>
             <h4>Autoban Threshold</h4>
-            <select bind:value={settings.autoban.global}>
+            <select bind:value={settings.autoban}>
                 <option value="all">All</option>
                 <option value="med">Medium And Above</option>
                 <option value="crit">Critical Only</option>
