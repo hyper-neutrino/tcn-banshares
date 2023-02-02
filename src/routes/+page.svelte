@@ -264,6 +264,11 @@
                 <input
                     type="submit"
                     name="submit"
+                    value="Submit Without Validation"
+                />
+                <input
+                    type="submit"
+                    name="submit"
                     value="Submit Without Checking IDs"
                 />
                 <br />
@@ -275,8 +280,13 @@
                 it into a document link if it's too long.
                 <br />
                 <br />
-                <b>This may take some time</b> if you have submitted a long ID list,
-                as the bot needs time to fetch all of the users.
+                <b>This may take some time</b> if you have submitted a long ID
+                list, as the bot needs time to fetch all of the users.
+                <br />
+                <br />
+                If the list is very long and you want to get the banshare published
+                ASAP, use "Submit Without Validation", which will check if the IDs
+                look correct but won't fetch all of the users.
             </div>
         </form>
     {/if}

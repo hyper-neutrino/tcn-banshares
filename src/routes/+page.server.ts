@@ -116,7 +116,7 @@ export const actions: Actions = {
 
         let ids_output: string = ids;
 
-        if (action === "Submit") {
+        if (action === "Submit" || action === "Submit Without Validation") {
             id_list = [...new Set(ids.trim().split(/\s+/))].sort(compare);
 
             for (const id of id_list)
@@ -128,17 +128,18 @@ export const actions: Actions = {
                         )}</code> is not a valid Discord ID.`
                     );
 
-            for (const id of id_list)
-                try {
-                    tags.push((await bot.users.fetch(id)).tag);
-                } catch {
-                    return abort(
-                        400,
-                        `Invalid ID: <code>${escape(
-                            id
-                        )}</code> did not correspond to a valid user.`
-                    );
-                }
+            if (action === "Submit")
+                for (const id of id_list)
+                    try {
+                        tags.push((await bot.users.fetch(id)).tag);
+                    } catch {
+                        return abort(
+                            400,
+                            `Invalid ID: <code>${escape(
+                                id
+                            )}</code> did not correspond to a valid user.`
+                        );
+                    }
 
             ids_output = id_list.join(" ");
         }
